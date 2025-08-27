@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clance Impostor Phenomenon Scale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9fb;
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .question {
+      background: #fff;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .options {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: center;
+    }
+    .options label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
+    }
+    .options input[type="radio"] {
+      margin-top: 5px;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #resultBox {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      border-radius: 6px;
+    }
+    #score {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    #note {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Clance Impostor Phenomenon Scale</h1>
+  <p>For each question, please select the number that best indicates how true the statement is of you. It is best to give the first response that enters your mind rather than dwelling on each statement and thinking about it over and over.</p>
+
+  <form id="scaleForm">
+    <div id="questions"></div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="resultBox">
+    <p>Your total score is: <span id="score"></span></p>
+    <p id="interpretation"></p>
+    <p id="explanation"></p>
+  </div>
+
+  <div id="note">
+    <p><strong>Note.</strong> From <em>The Impostor Phenomenon: When Success Makes You Feel Like A Fake</em> (pp. 20-22), by P.R. Clance, 1985, Toronto: Bantam Books. Copyright 1985 by Pauline Rose Clance, Ph.D., ABPP. Reprinted by permission. Do not reproduce without permission from Pauline Rose Clance, <a href="mailto:drpaulinerose@comcast.net">drpaulinerose@comcast.net</a>, <a href="http://www.paulineroseclance.com" target="_blank">www.paulineroseclance.com</a>.</p>
+  </div>
+
+  <script>
+    const questions = [
+      "I have often succeeded on a test or task even though I was afraid that I would not do well before I undertook the task.",
+      "I can give the impression that I’m more competent than I really am.",
+      "I avoid evaluations if possible and have a dread of others evaluating me.",
+      "When people praise me for something I’ve accomplished, I’m afraid I won’t be able to live up to their expectations of me in the future.",
+      "I sometimes think I obtained my present position or gained my present success because I happened to be in the right place at the right time or knew the right people.",
+      "I’m afraid people important to me may find out that I’m not as capable as they think I am.",
+      "I tend to remember the incidents in which I have not done my best more than those times I have done my best.",
+      "I rarely do a project or task as well as I’d like to do it.",
+      "Sometimes I feel or believe that my success in my life or in my job has been the result of some kind of error.",
+      "It’s hard for me to accept compliments or praise about my intelligence or accomplishments.",
+      "At times, I feel my success has been due to some kind of luck.",
+      "I’m disappointed at times in my present accomplishments and think I should have accomplished much more.",
+      "Sometimes I’m afraid others will discover how much knowledge or ability I really lack.",
+      "I’m often afraid that I may fail at a new assignment or undertaking even though I generally do well at what I attempt.",
+      "When I’ve succeeded at something and received recognition for my accomplishments, I have doubts that I can keep repeating that success.",
+      "If I receive a great deal of praise and recognition for something I’ve accomplished, I tend to discount the importance of what I’ve done.",
+      "I often compare my ability to those around me and think they may be more intelligent than I am.",
+      "I often worry about not succeeding with a project or examination, even though others around me have considerable confidence that I will do well.",
+      "If I’m going to receive a promotion or gain recognition of some kind, I hesitate to tell others until it is an accomplished fact.",
+      "I feel bad and discouraged if I’m not “the best” or at least “very special” in situations that involve achievement."
+    ];
+
+    const labels = {
+      1: "Not at all true",
+      2: "Rarely true",
+      3: "Sometimes true",
+      4: "Often true",
+      5: "Very true"
+    };
+
+    const container = document.getElementById('questions');
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.classList.add('question');
+      div.innerHTML = `<p><b>Q${i+1}.</b> ${q}</p>`;
+
+      const optionsDiv = document.createElement('div');
+      optionsDiv.classList.add('options');
+      for (let j = 1; j <= 5; j++) {
+        optionsDiv.innerHTML += `
+          <label>
+            ${j} = ${labels[j]}
+            <input type="radio" name="q${i}" value="${j}" required>
+          </label>`;
+      }
+
+      div.appendChild(optionsDiv);
+      container.appendChild(div);
+    });
+
+    document.getElementById('scaleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let score = 0;
+      const formData = new FormData(this);
+      for (let i = 0; i < questions.length; i++) {
+        score += parseInt(formData.get('q'+i));
+      }
+      document.getElementById('score').textContent = score;
+
+      let interpretation = "";
+      if (score <= 40) interpretation = "Few impostor characteristics.";
+      else if (score <= 60) interpretation = "Moderate impostor experiences.";
+      else if (score <= 80) interpretation = "Frequent impostor feelings.";
+      else interpretation = "Intense impostor experiences.";
+
+      const explanation = "The higher the score, the more frequently and seriously the Impostor Phenomenon interferes in a person’s life.";
+
+      document.getElementById('interpretation').textContent = interpretation;
+      document.getElementById('explanation').textContent = explanation;
+      document.getElementById('resultBox').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

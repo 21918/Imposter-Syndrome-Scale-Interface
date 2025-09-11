@@ -80,21 +80,26 @@
 </head>
 <body>
   <h1>Clance Impostor Phenomenon Scale</h1>
-  <p>For each question, please select the number that best indicates how true the statement is of you. It is best to give the first response that enters your mind rather than dwelling on each statement and thinking about it over and over.</p>
+
+  <p>
+    For each question, please select the number that best indicates how true the statement is of you.
+    It is best to give the first response that enters your mind rather than dwelling on each statement
+    and thinking about it over and over.
+  </p>
 
   <form id="scaleForm">
     <div id="questions"></div>
     <button type="submit">Submit</button>
   </form>
 
-  <div id="resultBox">
+  <div id="resultBox" aria-live="polite">
     <p>Your total score is: <span id="score"></span></p>
     <p id="interpretation"></p>
     <p id="explanation"></p>
   </div>
 
   <div id="note">
-    <p><strong>Note.</strong> From <em>The Impostor Phenomenon: When Success Makes You Feel Like A Fake</em> (pp. 20-22), by P.R. Clance, 1985, Toronto: Bantam Books. Copyright 1985 by Pauline Rose Clance, Ph.D., ABPP. Reprinted by permission. Do not reproduce without permission from Pauline Rose Clance, <a href="mailto:drpaulinerose@comcast.net">drpaulinerose@comcast.net</a>, <a href="http://www.paulineroseclance.com" target="_blank">www.paulineroseclance.com</a>.</p>
+    <p><strong>Note.</strong> From <em>The Impostor Phenomenon: When Success Makes You Feel Like A Fake</em> (pp. 20–22), by P.R. Clance, 1985, Toronto: Bantam Books. Copyright 1985 by Pauline Rose Clance, Ph.D., ABPP. Reprinted by permission. Do not reproduce without permission from Pauline Rose Clance, <a href="mailto:drpaulinerose@comcast.net">drpaulinerose@comcast.net</a>, <a href="http://www.paulineroseclance.com" target="_blank" rel="noopener">www.paulineroseclance.com</a>.</p>
   </div>
 
   <script>
@@ -137,11 +142,13 @@
 
       const optionsDiv = document.createElement('div');
       optionsDiv.classList.add('options');
+
       for (let j = 1; j <= 5; j++) {
+        const id = `q${i}_${j}`;
         optionsDiv.innerHTML += `
-          <label>
+          <label for="${id}">
             ${j} = ${labels[j]}
-            <input type="radio" name="q${i}" value="${j}" required>
+            <input id="${id}" type="radio" name="q${i}" value="${j}" required>
           </label>`;
       }
 
@@ -154,7 +161,7 @@
       let score = 0;
       const formData = new FormData(this);
       for (let i = 0; i < questions.length; i++) {
-        score += parseInt(formData.get('q'+i));
+        score += parseInt(formData.get('q' + i), 10);
       }
       document.getElementById('score').textContent = score;
 
@@ -164,7 +171,7 @@
       else if (score <= 80) interpretation = "Frequent impostor feelings.";
       else interpretation = "Intense impostor experiences.";
 
-      const explanation = "The higher the score, the more frequently and seriously the Impostor Phenomenon interferes in a person’s life.";
+      const explanation = "The higher the score, the more frequently and intensly you experience the Impostor Phenomenon in your day-to-day life.";
 
       document.getElementById('interpretation').textContent = interpretation;
       document.getElementById('explanation').textContent = explanation;
